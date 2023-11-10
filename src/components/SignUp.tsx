@@ -11,33 +11,74 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { AccountRegistration } from "../types/AccountType";
-import { ApiResponsePayload } from "../types/ResponseType";
+// import { ApiResponsePayload } from "../types/ResponseType";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { createAccount } from "../services/accountApi";
+import toast from "react-hot-toast";
+import { ApiResponseFieldError } from "../types/ResponseType";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const { mutate, isError, status } = useMutation({
+  const [fieldErrors, setFieldErrors] = useState<AccountRegistration>({
+    email: "",
+    hoLot: "",
+    password: "",
+    ten: "",
+  });
+  const navigate = useNavigate();
+
+  const { mutateAsync } = useMutation({
     mutationFn: createAccount,
-    onSuccess: (data, variables) => {
-      console.log(`It was a success POST onSuccess(): \n`);
-      console.log(data);
-    },
-    onError(error, variables, context) {
-      console.log(`It was a failed POST onError(): \n${error}`);
+    onError(error) {
+      console.log(
+        `This shouldn't be printed on any occasions onError(): \n${error}`
+      );
     },
   });
 
-  const { register, reset, handleSubmit } = useForm<AccountRegistration>();
-  const onSubmit: SubmitHandler<AccountRegistration> = (data) => {
-    mutate(data);
+  const handleFieldErrors = (
+    data: ApiResponseFieldError<AccountRegistration>
+  ) => {
+    toast.error(data.message);
+    setFieldErrors((current) => {
+      return { ...current, ...data.errors };
+    });
+  };
+
+  const { register, handleSubmit } = useForm<AccountRegistration>();
+  const onSubmit: SubmitHandler<AccountRegistration> = async (data) => {
+    const responseData = await mutateAsync(data);
+    if (responseData === undefined) {
+      toast.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
+      return;
+    }
+    if ("errors" in responseData) {
+      responseData.errors && handleFieldErrors(responseData);
+      !responseData.errors && toast.error(responseData.message);
+      return;
+    }
+    if (
+      responseData.payload.records &&
+      !("id" in responseData.payload.records)
+    ) {
+      const savedAccounts = responseData.payload.records;
+      if (savedAccounts.length && savedAccounts.length > 0) {
+        toast.success("Đăng ký thành công. Vui lòng xác nhận tài khoản");
+        navigate("confirmation", {
+          state: { email: savedAccounts[0].email },
+          replace: true,
+        });
+        return;
+      }
+    }
+    toast.error("Có lỗi xảy ra. Vui lòng thử lại sau");
   };
 
   return (
@@ -75,8 +116,8 @@ export default function SignUp() {
                   label="First Name"
                   autoFocus
                   {...register("ten")}
-                  // error={signUpErrors.ten !== ""}
-                  // helperText={signUpErrors.ten}
+                  error={fieldErrors.ten !== ""}
+                  helperText={fieldErrors.ten}
                   // inputRef={signUpTenRef}
                 />
               </Grid>
@@ -89,8 +130,8 @@ export default function SignUp() {
                   // name="hoLot"
                   autoComplete="family-name"
                   {...register("hoLot")}
-                  // error={signUpErrors.hoLot !== ""}
-                  // helperText={signUpErrors.hoLot}
+                  error={fieldErrors.hoLot !== ""}
+                  helperText={fieldErrors.hoLot}
                   // inputRef={signUpHoLotRef}
                 />
               </Grid>
@@ -103,8 +144,8 @@ export default function SignUp() {
                   // name="email"
                   autoComplete="email"
                   {...register("email")}
-                  // error={signUpErrors.email !== ""}
-                  // helperText={signUpErrors.email}
+                  error={fieldErrors.email !== ""}
+                  helperText={fieldErrors.email}
                   // inputRef={signUpEmailRef}
                 />
               </Grid>
@@ -118,8 +159,8 @@ export default function SignUp() {
                   id="password"
                   {...register("password")}
                   // autoComplete="new-password"
-                  // error={signUpErrors.password !== ""}
-                  // helperText={signUpErrors.password}
+                  error={fieldErrors.password !== ""}
+                  helperText={fieldErrors.password}
                   // inputRef={signUpPasswordRef}
                 />
               </Grid>

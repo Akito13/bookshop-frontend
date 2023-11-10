@@ -13,13 +13,9 @@ export async function createAccount(newAccount: AccountRegistration) {
       APIURL.ACCOUNT_SIGNUP,
       newAccount
     );
-    const apiResponse = response.data;
-    return apiResponse;
+    return response.data;
   } catch (err) {
     if (axios.isAxiosError(err) && err.response) {
-      //   console.log(
-      //     err.response.data as ApiResponseFieldError<AccountRegistration>
-      //   );
       return err.response.data as ApiResponseFieldError<AccountRegistration>;
     }
   }
