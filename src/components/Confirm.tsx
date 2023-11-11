@@ -19,8 +19,13 @@ import { AccountEmailConfirmation } from "../types/ConfirmationType";
 import { useMutation } from "@tanstack/react-query";
 import { sendEmailConfirmationCode } from "../services/mailApi";
 import { useEffect, useState } from "react";
-import { ApiResponseFieldError } from "../types/ResponseType";
+import {
+  ApiResponseFieldError,
+  ApiResponseSuccess,
+} from "../types/ResponseType";
 import toast from "react-hot-toast";
+import { Hidden } from "@mui/material";
+import { ServerErrorStatusCode } from "../utils/Constants";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -30,13 +35,15 @@ export default function Confirm() {
 
   const location = useLocation();
 
-  const [fieldErrors, setFieldErrors] = useState("");
+  const [confirmationCode, setConfirmationCode] = useState("");
 
   const { register, handleSubmit, setValue } =
     useForm<AccountEmailConfirmation>();
 
   useEffect(() => {
-    setValue("email", location.state.email);
+    if (location.state?.email) {
+      setValue("email", location.state.email);
+    }
   }, []);
 
   const { mutateAsync } = useMutation({
@@ -48,27 +55,40 @@ export default function Confirm() {
     },
   });
 
-  const handleFieldErrors = (
-    data: ApiResponseFieldError<AccountEmailConfirmation>
+  const handleErrors = (
+    data:
+      | ApiResponseFieldError<AccountEmailConfirmation>
+      | ApiResponseSuccess<null>
   ) => {
-    toast.error(data.message);
-    setFieldErrors(data.errors.confirmationCode);
+    if (ServerErrorStatusCode.includes(data.statusCode)) {
+      return true;
+    }
+    if ("errors" in data) {
+      setConfirmationCode(data.errors.confirmationCode);
+      return true;
+    }
+    return false;
   };
 
-  const onSubmit: SubmitHandler<AccountEmailConfirmation> = async (data) => {
+  const onSubmit: SubmitHandler<AccountEmailConfirmation> = async (data, e) => {
+    e?.preventDefault();
     const responseData = await mutateAsync(data);
     if (responseData === undefined) {
       toast.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
       return;
     }
-    if ("errors" in responseData) {
-      responseData.errors && handleFieldErrors(responseData);
-      !responseData.errors && toast.error(responseData.message);
+    if (handleErrors(responseData)) {
+      toast.error(responseData.message);
       return;
     }
+    // if ("errors" in responseData) {
+    //   responseData.errors && handleFieldErrors(responseData);
+    //   !responseData.errors && toast.error(responseData.message);
+    //   return;
+    // }
     toast.success("Xác nhận thành công.");
     window.history.replaceState({ state: null }, document.title);
-    navigate("../../sign-in", { relative: "path", replace: true });
+    navigate("/account/sign-in", { replace: true });
   };
 
   return (
@@ -102,7 +122,10 @@ export default function Confirm() {
               id="email"
               label="Email"
               {...register("email")}
-              hidden={true}
+              sx={{
+                display: "none",
+              }}
+              hiddenLabel
             />
             <TextField
               margin="normal"
@@ -113,8 +136,8 @@ export default function Confirm() {
               {...register("confirmationCode")}
               autoComplete="Confirmation Code"
               autoFocus
-              error={fieldErrors !== ""}
-              helperText={fieldErrors}
+              error={confirmationCode !== ""}
+              helperText={confirmationCode}
             />
             <Button
               type="submit"

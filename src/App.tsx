@@ -1,5 +1,5 @@
 import "./App.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/ProductsPage";
 import SignInPage from "./pages/SignInPage";
@@ -19,8 +19,14 @@ const router = createBrowserRouter([
       { path: "sign-in", element: <SignInPage /> },
       {
         path: "sign-up",
-        element: <SignUpPage />,
-        children: [{ path: "confirmation", element: <ConfirmPage /> }],
+        element: <Outlet />,
+        children: [
+          {
+            index: true,
+            element: <SignUpPage />,
+          },
+          { path: "confirmation", element: <ConfirmPage /> },
+        ],
       },
     ],
   },
@@ -44,7 +50,7 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} />
         <RouterProvider router={router}></RouterProvider>
         <Toaster
-          position="top-right"
+          position="top-center"
           reverseOrder={false}
           gutter={8}
           containerStyle={{ margin: "8px" }}

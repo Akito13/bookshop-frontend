@@ -14,13 +14,17 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { useState } from "react";
-import { AccountRegistration } from "../types/AccountType";
+import { Account, AccountRegistration } from "../types/AccountType";
 // import { ApiResponsePayload } from "../types/ResponseType";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { createAccount } from "../services/accountApi";
 import toast from "react-hot-toast";
-import { ApiResponseFieldError } from "../types/ResponseType";
+import {
+  ApiResponseFieldError,
+  ApiResponseSuccess,
+} from "../types/ResponseType";
+import { ServerErrorStatusCode } from "../utils/Constants";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -43,35 +47,52 @@ export default function SignUp() {
     },
   });
 
-  const handleFieldErrors = (
-    data: ApiResponseFieldError<AccountRegistration>
+  const handleErrors = (
+    data:
+      | ApiResponseFieldError<AccountRegistration>
+      | ApiResponseSuccess<Account>
   ) => {
-    toast.error(data.message);
-    setFieldErrors((current) => {
-      return { ...current, ...data.errors };
-    });
+    if (ServerErrorStatusCode.includes(data.statusCode)) {
+      return true;
+    }
+    if ("errors" in data) {
+      if (!data.errors) {
+        setFieldErrors({ email: "", hoLot: "", ten: "", password: "" });
+        return true;
+      } else {
+        setFieldErrors((current) => {
+          return { ...current, ...data.errors };
+        });
+        return true;
+      }
+    }
+    return false;
   };
 
   const { register, handleSubmit } = useForm<AccountRegistration>();
-  const onSubmit: SubmitHandler<AccountRegistration> = async (data) => {
+
+  const onSubmit: SubmitHandler<AccountRegistration> = async (data, e) => {
+    e?.preventDefault();
     const responseData = await mutateAsync(data);
     if (responseData === undefined) {
       toast.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
       return;
     }
-    if ("errors" in responseData) {
-      responseData.errors && handleFieldErrors(responseData);
-      !responseData.errors && toast.error(responseData.message);
+    if (handleErrors(responseData)) {
+      toast.error(responseData.message);
       return;
     }
+
     if (
+      "payload" in responseData &&
       responseData.payload.records &&
       !("id" in responseData.payload.records)
     ) {
       const savedAccounts = responseData.payload.records;
       if (savedAccounts.length && savedAccounts.length > 0) {
         toast.success("Đăng ký thành công. Vui lòng xác nhận tài khoản");
-        navigate("confirmation", {
+        console.log(savedAccounts[0].email);
+        navigate("/account/sign-up/confirmation", {
           state: { email: savedAccounts[0].email },
           replace: true,
         });
@@ -97,7 +118,7 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Đăng Ký
           </Typography>
           <Box
             component="form"
@@ -113,7 +134,7 @@ export default function SignUp() {
                   fullWidth
                   id="ten"
                   // name="ten"
-                  label="First Name"
+                  label="Tên"
                   autoFocus
                   {...register("ten")}
                   error={fieldErrors.ten !== ""}
@@ -126,7 +147,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="hoLot"
-                  label="Last Name"
+                  label="Họ và tên lót"
                   // name="hoLot"
                   autoComplete="family-name"
                   {...register("hoLot")}
@@ -140,7 +161,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Tài khoản email"
                   // name="email"
                   autoComplete="email"
                   {...register("email")}
@@ -154,7 +175,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   // name="password"
-                  label="Password"
+                  label="Mật khẩu"
                   type="password"
                   id="password"
                   {...register("password")}
@@ -171,12 +192,12 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Đăng ký
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <NavLink to="/sign-in" end>
-                  Already have an account? Sign in
+                  Bạn đã có tài khoản? Đăng nhập
                 </NavLink>
               </Grid>
             </Grid>

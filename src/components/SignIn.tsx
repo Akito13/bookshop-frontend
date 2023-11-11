@@ -1,35 +1,30 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {NavLink} from 'react-router-dom';
-import Footer from './Footer';
-
-
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { NavLink } from "react-router-dom";
+import Footer from "./Footer";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { AccountSignIn } from "../types/AccountType";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const { register, handleSubmit } = useForm<AccountSignIn>();
+  const onSubmit: SubmitHandler<AccountSignIn> = async (data, e) => {
+    e?.preventDefault();
   };
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -37,49 +32,46 @@ export default function SignIn() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <div>
+          <Box
+            component="form"
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
-              error
               margin="normal"
               required
               fullWidth
               id="email"
-              label="Email Address"
-              name="email"
+              label="Tài khoản email"
+              {...register("email")}
               autoComplete="email"
               autoFocus
+              error
               helperText="Incorrect entry."
             />
-            {/* <TextField
-                error
-                id="standard-error-helper-text"
-                label="Error"
-                defaultValue="Hello World"
-                helperText="Incorrect entry."
-                variant="standard"
-            /> */}
-            </div>
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
+              {...register("password")}
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              error
+              helperText=""
             />
             <Button
               type="submit"
@@ -91,10 +83,14 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <NavLink to="#" end>Forgot password?</NavLink>
+                <NavLink to="#" end>
+                  Forgot password?
+                </NavLink>
               </Grid>
               <Grid item>
-                <NavLink to="/sign-up" end>Don't have an account? Sign Up</NavLink>
+                <NavLink to="/sign-up" end>
+                  Don't have an account? Sign Up
+                </NavLink>
                 {/* <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link> */}
