@@ -9,23 +9,93 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
 import { duration } from "@mui/material";
+import Layout from "./layouts/Layout";
+import RequireAuth from "./components/RequireAuth";
+import AdminMenu from "./pages/AdminMainPage";
+import { Authority } from "./utils/Constants";
+import ErrorPage from "./pages/exceptions/ErrorPage";
+import SachDetails from "./pages/SachDetailsPage";
+import UserInfo from "./pages/UserInfoPage";
+import UserCartPage from "./pages/UserCartPage";
+import AdminInfoPage from "./pages/AdminInfoPage";
 
 const router = createBrowserRouter([
-  { path: "/", element: <HomePage /> },
-  { path: "/sach", element: <ProductsPage /> },
   {
-    path: "/account",
+    path: "/",
+    element: <Layout />,
     children: [
-      { path: "sign-in", element: <SignInPage /> },
+      { index: true, element: <HomePage /> },
       {
-        path: "sign-up",
+        path: "sach",
         element: <Outlet />,
         children: [
           {
             index: true,
-            element: <SignUpPage />,
+            element: <ProductsPage />,
           },
-          { path: "confirmation", element: <ConfirmPage /> },
+          {
+            path: ":sachId",
+            element: <SachDetails />,
+          },
+        ],
+      },
+
+      {
+        path: "*",
+        element: <ErrorPage code={404} text="Trang này không tồn tại" />,
+      },
+      {
+        path: "unauthorized",
+        element: <ErrorPage code={403} text="Bạn không có quyền truy cập" />,
+      },
+      {
+        path: "not-found",
+        element: <ErrorPage code={404} text="Trang này không tồn tại" />,
+      },
+      {
+        path: "account",
+        children: [
+          { path: "sign-in", element: <SignInPage /> },
+          {
+            path: "sign-up",
+            element: <Outlet />,
+            children: [
+              {
+                index: true,
+                element: <SignUpPage />,
+              },
+              { path: "confirmation", element: <ConfirmPage /> },
+            ],
+          },
+          {
+            element: <RequireAuth allowedAuthority="ROLE_USER" />,
+            children: [
+              {
+                path: "info",
+                element: <UserInfo />,
+              },
+              {
+                path: "cart",
+                element: <UserCartPage />,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        element: <RequireAuth allowedAuthority="ROLE_ADMIN" />,
+        children: [
+          {
+            path: "admin",
+            element: <Outlet />,
+            children: [
+              { index: true, element: <AdminMenu /> },
+              {
+                path: "info",
+                element: <AdminInfoPage />,
+              },
+            ],
+          },
         ],
       },
     ],
@@ -36,7 +106,8 @@ const router = createBrowserRouter([
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000,
+      staleTime: 0,
+      refetchOnWindowFocus: false,
     },
   },
 });

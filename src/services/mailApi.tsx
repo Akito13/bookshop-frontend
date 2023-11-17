@@ -5,12 +5,13 @@ import {
   ApiResponseSuccess,
   ApiResponseFieldError,
 } from "../types/ResponseType";
+import { axiosPublic } from "./axios";
 
 export async function sendEmailConfirmationCode(
   confirmData: AccountEmailConfirmation
 ) {
   try {
-    const response = await axios.post<ApiResponseSuccess<null>>(
+    const response = await axiosPublic.post<ApiResponseSuccess<null>>(
       APIURL.MAIL_CONFIRMATION,
       confirmData
     );

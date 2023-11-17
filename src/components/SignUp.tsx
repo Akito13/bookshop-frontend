@@ -24,7 +24,12 @@ import {
   ApiResponseFieldError,
   ApiResponseSuccess,
 } from "../types/ResponseType";
-import { ServerErrorStatusCode } from "../utils/Constants";
+import { NavigationLink, ServerErrorStatusCode } from "../utils/Constants";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
+import Header from "./Header";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -37,6 +42,11 @@ export default function SignUp() {
     ten: "",
   });
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) =>
+    e.preventDefault();
 
   const { mutateAsync } = useMutation({
     mutationFn: createAccount,
@@ -102,13 +112,29 @@ export default function SignUp() {
     toast.error("Có lỗi xảy ra. Vui lòng thử lại sau");
   };
 
+  const handleSearchForm = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      navigate(
+        {
+          pathname: NavigationLink.SACH_BASE,
+          search: `?ten=${(e.target as HTMLInputElement).value}`,
+        },
+        {
+          replace: true,
+        }
+      );
+    }
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        <Header handleSearchForm={handleSearchForm} />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 20,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -174,15 +200,26 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  // name="password"
                   label="Mật khẩu"
-                  type="password"
                   id="password"
                   {...register("password")}
-                  // autoComplete="new-password"
+                  type={showPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="Xem password"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                   error={fieldErrors.password !== ""}
                   helperText={fieldErrors.password}
-                  // inputRef={signUpPasswordRef}
                 />
               </Grid>
             </Grid>
@@ -196,7 +233,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <NavLink to="/sign-in" end>
+                <NavLink to={NavigationLink.SIGN_IN} end>
                   Bạn đã có tài khoản? Đăng nhập
                 </NavLink>
               </Grid>

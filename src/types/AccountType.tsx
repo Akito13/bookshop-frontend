@@ -13,8 +13,9 @@ export type AccountSignIn = {
 export type Account = {
   accountId: number;
   hoLot: string;
-  name: string;
+  ten: string;
   sdt: string;
   email: string;
   password: null;
+  role: string;
 };

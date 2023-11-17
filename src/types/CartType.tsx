@@ -1,4 +1,4 @@
-export type Cart = {
+export type CartSach = {
   id: number;
   ten: string;
   anh: string;
