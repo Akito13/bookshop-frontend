@@ -4,7 +4,12 @@ import { APIURL, CookieKey, NavigationLink } from "../utils/Constants";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid/DataGrid";
-import { QueryFunctionContext, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  QueryFunctionContext,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import useCookie from "../hooks/useCookie";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import axios from "axios";
@@ -23,6 +28,12 @@ import {
 } from "@mui/x-data-grid";
 import formatNumber from "../utils/numberFormatter";
 import Image from "mui-image";
+import toast from "react-hot-toast";
+
+type CartMutationVariablesType = {
+  id: number;
+  cartSach: CartSach;
+};
 
 function UserCartPage() {
   const [rowNums, setRowNums] = useState<GridRowSelectionModel>([]);
@@ -32,6 +43,7 @@ function UserCartPage() {
   const axiosPrivate = useAxiosPrivate();
   const [sachList, setSachList] = useState<any[]>([]);
   const [error, setError] = useState<string | null>();
+  const queryCLient = useQueryClient();
 
   const getFullCart = async (param: QueryFunctionContext<CartAmountParam>) => {
     const [_, id] = param.queryKey;
@@ -51,12 +63,12 @@ function UserCartPage() {
     }
   };
 
-  const updateCart = async (param: QueryFunctionContext<CartAmountParam>) => {
-    const [_, id] = param.queryKey;
+  const updateCart = async ({ id, cartSach }: CartMutationVariablesType) => {
     if (id == null || isNaN(+id) || id === 0) return null;
     try {
       const response = await axiosPrivate.post<ApiResponseSuccess<unknown>>(
-        `${APIURL.CART_BASE}/${id}`
+        `${APIURL.CART_BASE}/${id}`,
+        cartSach
       );
       console.log(response);
       return response.data;
@@ -67,16 +79,36 @@ function UserCartPage() {
       }
       return err;
     }
-  }
+  };
 
   const { data, isLoading } = useQuery({
     queryKey: ["getFullCart", +id],
     queryFn: getFullCart,
   });
 
-  useMutation({
-    mutationFn: 
-  })
+  const { mutateAsync } = useMutation({
+    mutationFn: updateCart,
+  });
+
+  const handleActionClick = (sachId: number) => {
+    const foundSach = sachList.filter((sach) => sach.id == sachId);
+    if (foundSach && foundSach.length > 0) {
+      const sach = foundSach[0];
+      sach.soLuong = -1;
+      mutateAsync({ id: +id, cartSach: sach })
+        .then((res) => {
+          queryCLient.invalidateQueries({ queryKey: ["getFullCart"] });
+          queryCLient.invalidateQueries({ queryKey: ["cartAmount"] });
+          console.log("Res là");
+          console.log(res);
+          toast.success("Xóa thành công");
+        })
+        .catch((err) => {
+          console.log("Error on cart mutation");
+          console.log(err);
+        });
+    }
+  };
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -112,6 +144,7 @@ function UserCartPage() {
             <>
               <Image
                 src={params.value}
+                duration={0}
                 style={{ objectFit: "contain", height: "60px" }}
               />
             </>
@@ -173,7 +206,7 @@ function UserCartPage() {
                 variant="contained"
                 // disabled={!activeRows?.includes(params?.id)}
                 disabled={!rowNums?.includes(params.id)}
-                onClick={}
+                onClick={() => handleActionClick(params.id as number)}
               >
                 Xóa
               </Button>

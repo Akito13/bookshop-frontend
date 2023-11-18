@@ -232,7 +232,11 @@ function Header({ drawerWidth = 0, handleSearchForm }: HeaderProps) {
                   size="large"
                   sx={{ padding: 2, marginX: 3 }}
                 >
-                  <StyledBadge badgeContent={noCartAmount ? 0 : data}>
+                  <StyledBadge
+                    badgeContent={
+                      noCartAmount ? 0 : typeof data == "object" ? 0 : data
+                    }
+                  >
                     <ShoppingCartIcon sx={{ color: "#fff" }} fontSize="large" />
                   </StyledBadge>
                 </IconButton>
