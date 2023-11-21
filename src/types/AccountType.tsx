@@ -15,7 +15,8 @@ export type Account = {
   hoLot: string;
   ten: string;
   sdt: string;
+  diaChi: string;
   email: string;
-  password: null;
+  password: null | undefined;
   role: string;
 };

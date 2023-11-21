@@ -2,6 +2,7 @@ export const APIURL = {
   BASE_URL: "http://localhost:8080/bookshop",
   ACCOUNT_SIGNUP: "/api/account/register",
   ACCOUNT_SIGNIN: "/api/account/auth",
+  ACCOUNT_BASE: "/api/account",
   MAIL_CONFIRMATION: "/api/confirm/account-register",
   SACH_RANDOM: "/api/sach/random",
   SACH_BASE: "/api/sach",
@@ -27,6 +28,7 @@ export const NavigationLink = {
   SACH_BASE: "/sach",
   ACCOUNT_USER_INFO: "/account/info",
   ACCOUNT_USER_CART: "/account/cart",
+  ACCOUNT_USER_ORDER: "/account/order",
   ACCOUNT_ADMIN_INFO: "/admin/info",
 };
 

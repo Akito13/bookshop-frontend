@@ -22,7 +22,7 @@ function AdminMenu() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <Header drawerWidth={drawerWidth} />
+      <Header drawerWidth={drawerWidth} handleSearchForm={() => {}} />
       <Drawer
         sx={{
           width: drawerWidth,

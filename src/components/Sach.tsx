@@ -30,7 +30,7 @@ export default function Sach({ sach }: SachProps) {
         maxWidth: 225,
         margin: "auto",
         minHeight: 280,
-        boxShadow: "0 2px 10px 1px #888",
+        boxShadow: "0 3px 5px 1px #888",
         borderRadius: 2,
       }}
     >
