@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Header, { CartAmountParam } from "../components/Header";
 import { APIURL, CookieKey, NavigationLink } from "../utils/Constants";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -63,23 +63,26 @@ function UserCartPage() {
     }
   };
 
-  const updateCart = async ({ id, cartSach }: CartMutationVariablesType) => {
-    if (id == null || isNaN(+id) || id === 0) return null;
-    try {
-      const response = await axiosPrivate.post<ApiResponseSuccess<unknown>>(
-        `${APIURL.CART_BASE}/${id}`,
-        cartSach
-      );
-      console.log(response);
-      return response.data;
-    } catch (err) {
-      // console.log(`Error: ${err}`);
-      if (axios.isAxiosError(err) && err.response) {
-        return err.response.data as ApiResponseFieldError<unknown>;
+  const updateCart = useCallback(
+    async ({ id, cartSach }: CartMutationVariablesType) => {
+      if (id == null || isNaN(+id) || id === 0) return null;
+      try {
+        const response = await axiosPrivate.post<ApiResponseSuccess<unknown>>(
+          `${APIURL.CART_BASE}/${id}`,
+          cartSach
+        );
+        console.log(response);
+        return response.data;
+      } catch (err) {
+        // console.log(`Error: ${err}`);
+        if (axios.isAxiosError(err) && err.response) {
+          return err.response.data as ApiResponseFieldError<unknown>;
+        }
+        return err;
       }
-      return err;
-    }
-  };
+    },
+    []
+  );
 
   const { data, isLoading } = useQuery({
     queryKey: ["getFullCart", +id],
