@@ -8,16 +8,20 @@ import ConfirmPage from "./pages/ConfirmPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
-import { duration } from "@mui/material";
 import Layout from "./layouts/Layout";
 import RequireAuth from "./components/RequireAuth";
-import AdminMenu from "./pages/AdminMainPage";
-import { Authority } from "./utils/Constants";
+import AdminMenu from "./pages/admin/AdminMainPage";
 import ErrorPage from "./pages/exceptions/ErrorPage";
 import SachDetails from "./pages/SachDetailsPage";
 import UserInfo from "./pages/UserInfoPage";
-import UserCartPage from "./pages/UserCartPage";
-import AdminInfoPage from "./pages/AdminInfoPage";
+import AdminSach from "./pages/admin/AdminSach";
+import AdminOrder from "./pages/admin/AdminOrder";
+import AdminStatistics from "./pages/admin/AdminStatistics";
+import AdminSachDetails from "./pages/admin/AdminSachDetails";
+import AdminSachCreate from "./pages/admin/AdminSachCreate";
+import AdminOrderDetails from "./pages/admin/AdminOrderDetails";
+import ForgotPass from "./pages/ForgotPass";
+import AdminLoai from "./pages/admin/AdminLoai";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +57,10 @@ const router = createBrowserRouter([
         element: <ErrorPage code={404} text="Trang này không tồn tại" />,
       },
       {
+        path: "forgot",
+        element: <ForgotPass />,
+      },
+      {
         path: "account",
         children: [
           { path: "sign-in", element: <SignInPage /> },
@@ -80,7 +88,15 @@ const router = createBrowserRouter([
               },
               {
                 path: "cart",
-                element: <UserCartPage />,
+                element: <UserInfo />,
+              },
+              {
+                path: "order/:orderId",
+                element: <UserInfo />,
+              },
+              {
+                path: "payment",
+                element: <UserInfo />,
               },
             ],
           },
@@ -91,14 +107,53 @@ const router = createBrowserRouter([
         children: [
           {
             path: "admin",
-            element: <Outlet />,
+            element: <AdminMenu />,
             children: [
-              { index: true, element: <AdminMenu /> },
               {
-                path: "info",
-                element: <AdminInfoPage />,
+                path: "sach",
+                element: <Outlet />,
+                children: [
+                  {
+                    index: true,
+                    element: <AdminSach />,
+                  },
+                  {
+                    path: ":sachId",
+                    element: <AdminSachDetails />,
+                  },
+                  {
+                    path: "new",
+                    element: <AdminSachCreate />,
+                  },
+                ],
+              },
+              {
+                path: "order",
+                element: <Outlet />,
+                children: [
+                  {
+                    index: true,
+                    element: <AdminOrder />,
+                  },
+                  {
+                    path: ":donhangId",
+                    element: <AdminOrderDetails />,
+                  },
+                ],
+              },
+              {
+                path: "statistics",
+                element: <AdminStatistics />,
+              },
+              {
+                path: "loai",
+                element: <AdminLoai />,
               },
             ],
+          },
+          {
+            path: "admin/info",
+            element: <UserInfo />,
           },
         ],
       },

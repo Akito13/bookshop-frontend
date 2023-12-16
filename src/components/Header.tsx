@@ -23,7 +23,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import axios from "axios";
 
 const userSettings = ["Tài khoản", "Đơn hàng", "Thoát"];
-const adminSettings = ["Tài khoản", "Thoát"];
+const adminSettings = ["Tài khoản", "Quản lý", "Thoát"];
 
 type HeaderProps = {
   drawerWidth?: number;
@@ -117,13 +117,13 @@ function Header({ drawerWidth = 0, handleSearchForm }: HeaderProps) {
         });
         break;
       }
-      // case userSettings[1]: {
-      //   navigate(NavigationLink.ACCOUNT_USER_CART, {
-      //     replace: true,
-      //     state: { from: location },
-      //   });
-      //   break;
-      // }
+      case userSettings[1]: {
+        navigate(NavigationLink.ACCOUNT_USER_ORDER, {
+          replace: true,
+          state: { from: location },
+        });
+        break;
+      }
       case userSettings[2]: {
         clearAuth();
         clearId();
@@ -140,56 +140,70 @@ function Header({ drawerWidth = 0, handleSearchForm }: HeaderProps) {
         navigate(NavigationLink.ACCOUNT_ADMIN_INFO, { replace: true });
         break;
       }
+      case adminSettings[1]: {
+        navigate(NavigationLink.HOME_ADMIN, { replace: true });
+        break;
+      }
+      case userSettings[2]: {
+        clearAuth();
+        clearId();
+        clearJwt();
+        navigate(NavigationLink.SIGN_IN, { replace: true });
+        break;
+      }
     }
   };
 
   return (
     <AppBar
       sx={{
-        width: `calc(100% - ${drawerWidth}px)`,
+        // width: `calc(100% - ${drawerWidth}px)`,
+
         ml: `${drawerWidth}px`,
+        zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      <Container maxWidth="xl" sx={{ maxHeight: 150, paddingY: 1 }}>
-        <Toolbar disableGutters>
-          <NavLink
-            to={NavigationLink.HOME_USER}
-            color="inherit"
-            style={{
-              marginRight: 50,
-              flexGrow: 0,
-              display: "flex",
+      {/* <Container maxWidth="xl" sx={{ maxHeight: 150, paddingY: 1 }}> */}
+      <Toolbar sx={{ paddingY: 1.5 }}>
+        <NavLink
+          to={NavigationLink.HOME_USER}
+          color="inherit"
+          style={{
+            marginRight: 50,
+            flexGrow: authority !== "ROLE_ADMIN" ? 0 : 2,
+            display: "flex",
+            textDecoration: "none",
+          }}
+        >
+          <AutoStoriesIcon
+            sx={{
+              display: { xs: "none", md: "flex" },
+              mr: 1,
+              color: "#fff",
+              marginRight: 3,
+            }}
+          />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              fontFamily: "monospace",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "#fff",
               textDecoration: "none",
+              flexGrow: 1,
+              textDecorationLine: "none",
             }}
           >
-            <AutoStoriesIcon
-              sx={{
-                display: { xs: "none", md: "flex" },
-                mr: 1,
-                color: "#fff",
-                marginRight: 3,
-              }}
-            />
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="#app-bar-with-responsive-menu"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "#fff",
-                textDecoration: "none",
-                flexGrow: 1,
-                textDecorationLine: "none",
-              }}
-            >
-              BookShop
-            </Typography>
-          </NavLink>
+            BookShop
+          </Typography>
+        </NavLink>
+        {authority !== "ROLE_ADMIN" ? (
           <Box flexGrow={1} component={"form"} onKeyDown={handleSearchForm}>
             <TextField
               type="search"
@@ -219,9 +233,26 @@ function Header({ drawerWidth = 0, handleSearchForm }: HeaderProps) {
               }}
             />
           </Box>
-          <CheckAuthentication isShowedWhen={isLoggedIn}>
-            <Box sx={{ flexGrow: 0 }}>
-              <CssBaseline />
+        ) : null}
+        {authority !== "ROLE_ADMIN" && (
+          <Box sx={{ flexGrow: 0 }}>
+            <NavLink to={NavigationLink.SACH_BASE} state={{ from: location }}>
+              <BackgroundBlendedButton
+                customColor="#fff"
+                toColor="#1976d2"
+                custombgColor="#1976d2"
+                toBackgroundColor="#fff"
+                variant="contained"
+              >
+                Tủ sách
+              </BackgroundBlendedButton>
+            </NavLink>
+          </Box>
+        )}
+        <CheckAuthentication isShowedWhen={isLoggedIn}>
+          <Box sx={{ flexGrow: 0 }}>
+            <CssBaseline />
+            {authority === "ROLE_USER" ? (
               <NavLink
                 to={NavigationLink.ACCOUNT_USER_CART}
                 replace
@@ -241,64 +272,65 @@ function Header({ drawerWidth = 0, handleSearchForm }: HeaderProps) {
                   </StyledBadge>
                 </IconButton>
               </NavLink>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px", ml: "50px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {authority == "ROLE_USER"
-                  ? userSettings.map((setting) => (
-                      <MenuItem
-                        id={setting + ".user"}
-                        key={setting}
-                        onClick={handleCloseUserMenu}
-                      >
-                        <Typography textAlign="center">{setting}</Typography>
-                      </MenuItem>
-                    ))
-                  : adminSettings.map((setting) => (
-                      <MenuItem
-                        id={setting + ".admin"}
-                        key={setting}
-                        onClick={handleCloseUserMenu}
-                      >
-                        <Typography textAlign="center">{setting}</Typography>
-                      </MenuItem>
-                    ))}
-              </Menu>
-            </Box>
-          </CheckAuthentication>
-          <CheckAuthentication isShowedWhen={!isLoggedIn}>
-            <NavLink to={NavigationLink.SIGN_IN} state={{ from: location }}>
-              <BackgroundBlendedButton
-                customColor="#fff"
-                toColor="#1976d2"
-                custombgColor="#1976d2"
-                toBackgroundColor="#fff"
-                variant="contained"
-              >
-                Đăng nhập
-              </BackgroundBlendedButton>
-            </NavLink>
-          </CheckAuthentication>
-        </Toolbar>
-      </Container>
+            ) : null}
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: "45px", ml: "50px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {authority == "ROLE_USER"
+                ? userSettings.map((setting) => (
+                    <MenuItem
+                      id={setting + ".user"}
+                      key={setting}
+                      onClick={handleCloseUserMenu}
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))
+                : adminSettings.map((setting) => (
+                    <MenuItem
+                      id={setting + ".admin"}
+                      key={setting}
+                      onClick={handleCloseUserMenu}
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+            </Menu>
+          </Box>
+        </CheckAuthentication>
+        <CheckAuthentication isShowedWhen={!isLoggedIn}>
+          <NavLink to={NavigationLink.SIGN_IN} state={{ from: location }}>
+            <BackgroundBlendedButton
+              customColor="#fff"
+              toColor="#1976d2"
+              custombgColor="#1976d2"
+              toBackgroundColor="#fff"
+              variant="contained"
+            >
+              Đăng nhập
+            </BackgroundBlendedButton>
+          </NavLink>
+        </CheckAuthentication>
+      </Toolbar>
+      {/* </Container> */}
     </AppBar>
   );
 }

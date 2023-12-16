@@ -12,7 +12,7 @@ export async function sendEmailConfirmationCode(
 ) {
   try {
     const response = await axiosPublic.post<ApiResponseSuccess<null>>(
-      APIURL.MAIL_CONFIRMATION,
+      `${APIURL.MAIL_CONFIRMATION}/account-register`,
       confirmData
     );
     return response.data;

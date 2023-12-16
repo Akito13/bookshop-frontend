@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { BaseSyntheticEvent, Dispatch, SetStateAction, useState } from "react";
 
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -11,17 +11,61 @@ import formatNumber from "../utils/numberFormatter";
 import AddShoppingCartRoundedIcon from "@mui/icons-material/AddShoppingCartRounded";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { NavLink, Navigate } from "react-router-dom";
-import { NavigationLink } from "../utils/Constants";
+import { APIURL, CookieKey, NavigationLink } from "../utils/Constants";
+import useCookie from "../hooks/useCookie";
+import EditIcon from "@mui/icons-material/BorderColor";
+import DeleteIcon from "@mui/icons-material/Delete";
+import RestoreIcon from "@mui/icons-material/Restore";
+import { axiosPrivate } from "../services/axios";
+import toast from "react-hot-toast";
+import BasicModal from "./Modal";
+import { CartSach } from "../types/CartType";
 
 type SachProps = {
   sach: SachType;
+  onAddToCart?: (
+    data: CartSach,
+    e: BaseSyntheticEvent<object, any, any> | undefined
+  ) => Promise<void>;
+  handleReset?: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Sach({ sach }: SachProps) {
-  const [expanded, setExpanded] = useState(false);
+export default function Sach({ sach, handleReset, onAddToCart }: SachProps) {
+  const [authority] = useCookie(CookieKey.AUTHORITY);
+  const [open, setOpen] = useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const handleSachDelete = () => {
+    axiosPrivate
+      .delete(`${APIURL.SACH_BASE}/${sach.id}`)
+      .then((res) => {
+        toast.success("Đã xóa thành công");
+        if (handleReset) {
+          handleReset((prev) => !prev);
+        }
+        console.log(res);
+      })
+      .catch((error) => {
+        toast.error("Xảy ra lỗi");
+        console.log("Lỗi khi xóa sách");
+        console.log(error);
+      });
+  };
+
+  const handleSachRestore = () => {
+    axiosPrivate
+      .patch(`${APIURL.SACH_BASE}/${sach.id}`)
+      .then((res) => {
+        toast.success("Khôi phục thành công");
+        if (handleReset) {
+          handleReset((prev) => !prev);
+        }
+        console.log(res);
+      })
+      .catch((error) => {
+        toast.error("Xảy ra lỗi");
+        console.log("Lỗi khi khôi phục sách");
+        console.log(error);
+      });
   };
 
   return (
@@ -62,10 +106,12 @@ export default function Sach({ sach }: SachProps) {
         </Typography>
         <Typography
           height={30}
-          minWidth={200}
+          width={"95%"}
+          paddingRight={2}
           noWrap
           sx={{
             fontSize: "17px",
+            textOverflow: "ellipsis",
           }}
           color="text.secondary"
         >
@@ -83,54 +129,85 @@ export default function Sach({ sach }: SachProps) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="Thêm vào cart">
-          <AddShoppingCartRoundedIcon />
-        </IconButton>
-        <NavLink to={NavigationLink.SACH_BASE + `/${sach.id}`}>
-          <IconButton aria-label="Xem chi tiết">
-            <InfoOutlinedIcon />
-          </IconButton>
-        </NavLink>
-        {/* <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore> */}
+        {authority === "ROLE_ADMIN" ? (
+          <>
+            <BasicModal
+              open={open}
+              handleClose={() => setOpen(false)}
+              handleConfirm={() => {
+                handleSachDelete();
+                setOpen(false);
+              }}
+              content={`Bạn chắc chắn muốn xóa ${sach.ten} ?`}
+            />
+            {sach.trangThai ? (
+              <>
+                <IconButton aria-label="Xóa sách" onClick={() => setOpen(true)}>
+                  <DeleteIcon color="error" />
+                </IconButton>
+                <NavLink to={NavigationLink.HOME_ADMIN + `/${sach.id}`}>
+                  <IconButton aria-label="Chỉnh sửa sách">
+                    <EditIcon color="primary" />
+                  </IconButton>
+                </NavLink>
+              </>
+            ) : (
+              <>
+                <Typography variant="h6">Đã xóa</Typography>
+                <IconButton
+                  aria-label="Khôi phục sách"
+                  onClick={handleSachRestore}
+                >
+                  <RestoreIcon color="success" />
+                </IconButton>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            {sach.soLuong > 0 ? (
+              <IconButton
+                aria-label="Thêm vào cart"
+                onClick={(e) =>
+                  onAddToCart &&
+                  onAddToCart(
+                    {
+                      anh: sach.anh,
+                      id: sach.id,
+                      soLuong: sach.soLuong,
+                      ten: sach.ten,
+                      gia:
+                        sach.giaSach.giaBan -
+                        sach.giaSach.giaBan * sach.giaSach.phanTramGiam,
+                      trangThai: sach.trangThai,
+                      phanTramGiam: sach.giaSach.phanTramGiam,
+                    },
+                    e
+                  )
+                }
+              >
+                <AddShoppingCartRoundedIcon />
+              </IconButton>
+            ) : (
+              <span
+                style={{
+                  fontSize: "16px",
+                  display: "inline-block",
+                  color: "#C92127",
+                  textAlign: "center",
+                }}
+              >
+                (Tạm hết hàng)
+              </span>
+            )}
+            <NavLink to={NavigationLink.SACH_BASE + `/${sach.id}`}>
+              <IconButton aria-label="Xem chi tiết">
+                <InfoOutlinedIcon />
+              </IconButton>
+            </NavLink>
+          </>
+        )}
       </CardActions>
-      {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and
-            set aside for 10 minutes.
-          </Typography>
-          <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet
-            over medium-high heat. Add chicken, shrimp and chorizo, and cook,
-            stirring occasionally until lightly browned, 6 to 8 minutes.
-            Transfer shrimp to a large plate and set aside, leaving chicken and
-            chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes,
-            onion, salt and pepper, and cook, stirring often until thickened and
-            fragrant, about 10 minutes. Add saffron broth and remaining 4 1/2
-            cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography paragraph>
-            Add rice and stir very gently to distribute. Top with artichokes and
-            peppers, and cook without stirring, until most of the liquid is
-            absorbed, 15 to 18 minutes. Reduce heat to medium-low, add reserved
-            shrimp and mussels, tucking them down into the rice, and cook again
-            without stirring, until mussels have opened and rice is just tender,
-            5 to 7 minutes more. (Discard any mussels that don&apos;t open.)
-          </Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then
-            serve.
-          </Typography>
-        </CardContent>
-      </Collapse> */}
     </Card>
   );
 }

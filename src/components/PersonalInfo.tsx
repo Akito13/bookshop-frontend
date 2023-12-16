@@ -2,7 +2,6 @@ import { ChangeEvent, Dispatch, useCallback, useEffect, useState } from "react";
 import { Account } from "../types/AccountType";
 import {
   FieldError,
-  FieldErrors,
   FieldPath,
   FieldValues,
   RegisterOptions,

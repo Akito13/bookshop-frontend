@@ -25,6 +25,14 @@ function DropdownSelect<
         value={sortBy}
         label="Sắp xếp"
         onChange={handleSortByChange}
+        MenuProps={{
+          PaperProps: {
+            style: {
+              maxHeight: 20 * 4.5 + 8,
+              width: 250,
+            },
+          },
+        }}
       >
         {values.map((v, i) => (
           <MenuItem key={v as string} value={v}>

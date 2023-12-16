@@ -10,6 +10,8 @@ export type AccountSignIn = {
   password: string;
 };
 
+export type AccountForgotPass = AccountSignIn & { confirmationCode: string };
+
 export type Account = {
   accountId: number;
   hoLot: string;

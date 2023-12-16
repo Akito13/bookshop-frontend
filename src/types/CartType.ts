@@ -5,4 +5,5 @@ export type CartSach = {
   trangThai: boolean;
   gia: number;
   soLuong: number;
+  phanTramGiam: number;
 };

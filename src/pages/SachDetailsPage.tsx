@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { axiosPublic } from "../services/axios";
 import {
   ApiResponseFieldError,
@@ -30,6 +30,7 @@ function SachDetails() {
   const navigate = useNavigate();
   const [error, setError] = useState<ApiResponseFieldError<SachType>>();
   const [id] = useCookie(CookieKey.ACCOUNT_ID);
+  const [authority] = useCookie(CookieKey.AUTHORITY);
   const axiosPrivate = useAxiosPrivate();
   const queryClient = useQueryClient();
 
@@ -191,14 +192,25 @@ function SachDetails() {
                     {formatNumber(sach.giaSach.giaBan)} đ
                   </span>
                   <span style={{ fontSize: "18px", display: "inline-block" }}>
-                    (Còn lại: {sach.soLuong})
+                    {sach.soLuong && sach.soLuong > 0
+                      ? `(Còn lại: ${sach.soLuong})`
+                      : null}
                   </span>
+                </Typography>
+                <Typography paragraph paddingRight={6} pt={2}>
+                  <Typography variant="h6">Tóm tắt nội dung</Typography>
+                  {sach.moTa}
                 </Typography>
                 <Box
                   component="form"
                   noValidate
                   onSubmit={handleSubmit(onSubmit)}
-                  sx={{ mt: 3 }}
+                  sx={{
+                    mt: 3,
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: 3,
+                  }}
                 >
                   <TextField
                     id="soLuong"
@@ -216,6 +228,30 @@ function SachDetails() {
                     error={!isValid}
                     helperText={!isValid ? "Phải là số lớn hơn 0" : ""}
                   />
+                  {authority === "ROLE_USER" ? (
+                    sach.soLuong > 0 ? (
+                      <LoadingButton
+                        // size="small"
+                        type="submit"
+                        loading={isLoading}
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2, ml: 3 }}
+                      >
+                        <span>Thêm vào giỏ</span>
+                      </LoadingButton>
+                    ) : (
+                      <span
+                        style={{
+                          fontSize: "16px",
+                          display: "inline-block",
+                          color: "#C92127",
+                          textAlign: "center",
+                        }}
+                      >
+                        (Tạm hết hàng)
+                      </span>
+                    )
+                  ) : null}
                   <TextField
                     required
                     fullWidth
@@ -276,15 +312,6 @@ function SachDetails() {
                     }}
                     hiddenLabel
                   />
-                  <LoadingButton
-                    // size="small"
-                    type="submit"
-                    loading={isLoading}
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2, ml: 3 }}
-                  >
-                    <span>Thêm vào giỏ</span>
-                  </LoadingButton>
                 </Box>
               </Grid>
             </>

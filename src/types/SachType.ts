@@ -25,6 +25,6 @@ export type Gia = {
 };
 
 export type GiamGiaPeriod = {
-  startTime: string;
-  endTime: string;
+  startTime: string | null;
+  endTime: string | null;
 };

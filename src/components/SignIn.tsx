@@ -121,7 +121,11 @@ export default function SignIn() {
         setAccountId(tokenPayload.id, { expires: 1 });
         setIsLoading(false);
         toast.success(`Chào mừng trở lại ${account.hoLot} ${account.ten}`);
-        navigate(from, { replace: true });
+        if (tokenPayload.authority === "ROLE_USER") {
+          navigate(from, { replace: true });
+        } else {
+          navigate(NavigationLink.HOME_ADMIN, { replace: true });
+        }
       }
     }
   };
@@ -158,7 +162,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Đăng Nhập
           </Typography>
           <Box
             component="form"
@@ -214,12 +218,12 @@ export default function SignIn() {
             <Grid container>
               <Grid item xs>
                 <NavLink to={NavigationLink.FORGOT_PASSWORD} end>
-                  Forgot password?
+                  Quên mật khẩu?
                 </NavLink>
               </Grid>
               <Grid item>
                 <NavLink to={NavigationLink.SIGN_UP} end>
-                  Don't have an account? Sign Up
+                  Đăng Ký
                 </NavLink>
               </Grid>
             </Grid>

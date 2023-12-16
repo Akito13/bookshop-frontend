@@ -13,7 +13,8 @@ import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRound
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import LeftSideList from "../components/LeftSideList";
 import { createSearchParams, useLocation, useNavigate } from "react-router-dom";
-import { NavigationLink } from "../utils/Constants";
+import { CookieKey, NavigationLink } from "../utils/Constants";
+import useCookie from "../hooks/useCookie";
 
 type SachByMaLoai = {
   [key: string]: SachType[];
@@ -36,6 +37,8 @@ function HomePage() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const [id] = useCookie(CookieKey.ACCOUNT_ID);
+  const [authority] = useCookie(CookieKey.AUTHORITY);
 
   if (data == undefined && !isLoading) {
     console.log("data bị " + data);
@@ -54,7 +57,9 @@ function HomePage() {
     let itemList = [];
     for (const key in sachByLoai) {
       const sachs = sachByLoai[key];
-      itemList.push(<ItemList key={key} isLoading sachs={sachs} />);
+      itemList.push(
+        <ItemList key={key} isLoading sachs={sachs} accountId={id} />
+      );
     }
     return itemList;
   };
@@ -87,7 +92,11 @@ function HomePage() {
     console.log(maLoai);
     navigate(
       {
-        pathname: `${NavigationLink.SACH_BASE}`,
+        pathname: `${
+          authority === "ROLE_ADMIN"
+            ? NavigationLink.HOME_ADMIN
+            : NavigationLink.SACH_BASE
+        }`,
         search: createSearchParams({
           loai: maLoai,
         }).toString(),
@@ -121,7 +130,15 @@ function HomePage() {
       >
         <Header handleSearchForm={handleSearchForm} />
       </Box>
-      <Box sx={{ mb: 20, backgroundColor: "#f8f6f0", paddingY: 5 }}>
+      <Box
+        sx={{
+          mb: 20,
+          backgroundColor: "#f8f6f0",
+          paddingY: 5,
+          maxWidth: 1440,
+          marginX: "auto",
+        }}
+      >
         <Grid
           container
           style={{
@@ -157,7 +174,7 @@ function HomePage() {
           container
           columnSpacing={2}
           style={{
-            maxWidth: 1440,
+            maxWidth: "100%",
             minWidth: 400,
             marginBottom: 80,
             margin: "auto",
@@ -168,7 +185,7 @@ function HomePage() {
           </Grid>
           <Grid item xs={9}>
             {result.map((s, i) => (
-              <Box key={i} mb={12} sx={{ width: "95%" }}>
+              <Box key={i} mb={12}>
                 {s}
               </Box>
             ))}

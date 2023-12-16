@@ -1,24 +1,15 @@
 import {
   Backdrop,
   Box,
-  Button,
   CircularProgress,
   Grid,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
-  Paper,
-  Stack,
-  TextField,
-  // Theme,
   Typography,
-  styled,
-  // createStyles,
-  // makeStyles,
 } from "@mui/material";
 import React, {
-  ChangeEvent,
   Reducer,
   useCallback,
   useEffect,
@@ -27,19 +18,18 @@ import React, {
 } from "react";
 import Header from "../components/Header";
 import { APIURL, CookieKey, NavigationLink } from "../utils/Constants";
-import { NavLink, useNavigate } from "react-router-dom";
-import CustomNavLink from "../components/CustomNavLink";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import useCookie from "../hooks/useCookie";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import axios from "axios";
-import {
-  ApiResponseFieldError,
-  ApiResponseSuccess,
-} from "../types/ResponseType";
+import { ApiResponseSuccess } from "../types/ResponseType";
 import { Account } from "../types/AccountType";
-import { SubmitHandler, useForm } from "react-hook-form";
 import PersonalInfo from "../components/PersonalInfo";
 import { useMutation } from "@tanstack/react-query";
+import UserOrderPage from "./UserOrderPage";
+import UserCartPage from "./UserCartPage";
+import UserOrderDetailsPage from "./UserOrderDetailsPage";
+import StripeContainer from "../components/StripeContainer";
 
 export type ParamActionString = {
   type: "HOLOT" | "TEN" | "SDT" | "DIACHI";
@@ -80,7 +70,11 @@ export type AccountMutationVairablesType = {
 function UserInfoPage() {
   const navigate = useNavigate();
   const [id] = useCookie(CookieKey.ACCOUNT_ID);
+  const [authority] = useCookie(CookieKey.AUTHORITY);
   const [isReload, setIsReload] = useState(false);
+  const { pathname } = useLocation();
+  const { orderId } = useParams();
+
   const [account, dispatch] = useReducer<Reducer<ParamState, ParamAction>>(
     reducer,
     {
@@ -219,7 +213,11 @@ function UserInfoPage() {
               <List>
                 <ListItem
                   component={NavLink}
-                  to={NavigationLink.ACCOUNT_USER_INFO}
+                  to={
+                    authority === "ROLE_USER"
+                      ? NavigationLink.ACCOUNT_USER_INFO
+                      : NavigationLink.ACCOUNT_ADMIN_INFO
+                  }
                   sx={{
                     "& *": {
                       color: "#666",
@@ -235,34 +233,68 @@ function UserInfoPage() {
                     <ListItemText primary="Thông Tin Cá Nhân" />
                   </ListItemButton>
                 </ListItem>
-                <ListItem
-                  component={NavLink}
-                  to={NavigationLink.ACCOUNT_USER_ORDER}
-                  sx={{
-                    "& *": {
-                      color: "#666",
-                      fontSize: "20px !important",
-                    },
-                    "&.active *": {
-                      color: "#1976d2",
-                      fontWeight: "bolder",
-                    },
-                  }}
-                >
-                  <ListItemButton>
-                    <ListItemText primary="Lịch Sử Đặt Hàng" />
-                  </ListItemButton>
-                </ListItem>
+                {authority === "ROLE_USER" ? (
+                  <>
+                    <ListItem
+                      component={NavLink}
+                      to={NavigationLink.ACCOUNT_USER_ORDER}
+                      sx={{
+                        "& *": {
+                          color: "#666",
+                          fontSize: "20px !important",
+                        },
+                        "&.active *": {
+                          color: "#1976d2",
+                          fontWeight: "bolder",
+                        },
+                      }}
+                    >
+                      <ListItemButton>
+                        <ListItemText primary="Lịch Sử Đặt Hàng" />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem
+                      component={NavLink}
+                      to={NavigationLink.ACCOUNT_USER_CART}
+                      sx={{
+                        "& *": {
+                          color: "#666",
+                          fontSize: "20px !important",
+                        },
+                        "&.active *": {
+                          color: "#1976d2",
+                          fontWeight: "bolder",
+                        },
+                      }}
+                    >
+                      <ListItemButton>
+                        <ListItemText primary="Giỏ Hàng" />
+                      </ListItemButton>
+                    </ListItem>
+                  </>
+                ) : null}
               </List>
             </Grid>
             <Grid item xs={9}>
-              <PersonalInfo
-                account={account}
-                handleFormChange={handleFormChange}
-                reloadHandler={setIsReload}
-                handleAccountMutation={mutateAsync}
-                accountId={id}
-              />
+              {pathname.includes("info") && (
+                <PersonalInfo
+                  account={account}
+                  handleFormChange={handleFormChange}
+                  reloadHandler={setIsReload}
+                  handleAccountMutation={mutateAsync}
+                  accountId={id}
+                />
+              )}
+              {pathname.includes("order") && orderId != null && (
+                <UserOrderDetailsPage orderId={+orderId} accountId={+id} />
+              )}
+              {pathname.includes("order") && orderId == null && (
+                <UserOrderPage />
+              )}
+              {pathname.includes("cart") && <UserCartPage account={account} />}
+              {pathname.includes("payment") && (
+                <StripeContainer account={account} />
+              )}
             </Grid>
           </Grid>
         </Box>

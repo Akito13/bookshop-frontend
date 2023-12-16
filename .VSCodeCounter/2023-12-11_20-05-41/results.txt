@@ -1,0 +1,124 @@
+Date : 2023-12-11 20:05:41
+Directory : c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend
+Total : 78 files,  15527 codes, 569 comments, 505 blanks, all 16601 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| TypeScript JSX     |         53 |      8,081 |        493 |        438 |      9,012 |
+| JSON               |          3 |      7,082 |          0 |          3 |      7,085 |
+| TypeScript         |         15 |        292 |          5 |         47 |        344 |
+| JSON with Comments |          1 |         21 |          2 |          3 |         26 |
+| Markdown           |          1 |         19 |          0 |          9 |         28 |
+| JavaScript         |          1 |         18 |          0 |          1 |         19 |
+| HTML               |          1 |         13 |          0 |          1 |         14 |
+| XML                |          1 |          1 |          0 |          0 |          1 |
+| CSS                |          2 |          0 |         69 |          3 |         72 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                             | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                |         78 |     15,527 |        569 |        505 |     16,601 |
+| . (Files)                                                                                        |          8 |      7,158 |          3 |         19 |      7,180 |
+| public                                                                                           |          1 |          1 |          0 |          0 |          1 |
+| src                                                                                              |         69 |      8,368 |        566 |        486 |      9,420 |
+| src (Files)                                                                                      |          6 |        203 |         75 |         14 |        292 |
+| src\components                                                                                   |         21 |      2,129 |         80 |        144 |      2,353 |
+| src\hooks                                                                                        |          3 |         80 |          0 |          9 |         89 |
+| src\layouts                                                                                      |          1 |         12 |          0 |          2 |         14 |
+| src\pages                                                                                        |         20 |      5,517 |        406 |        259 |      6,182 |
+| src\pages (Files)                                                                                |         11 |      2,686 |        122 |        140 |      2,948 |
+| src\pages\admin                                                                                  |          8 |      2,778 |        284 |        115 |      3,177 |
+| src\pages\exceptions                                                                             |          1 |         53 |          0 |          4 |         57 |
+| src\services                                                                                     |          5 |        140 |          3 |         14 |        157 |
+| src\types                                                                                        |          8 |        132 |          2 |         25 |        159 |
+| src\utils                                                                                        |          5 |        155 |          0 |         19 |        174 |
++--------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                         | language           | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\.eslintrc.cjs                          | JavaScript         |         18 |          0 |          1 |         19 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\README.md                              | Markdown           |         19 |          0 |          9 |         28 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\index.html                             | HTML               |         13 |          0 |          1 |         14 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\package-lock.json                      | JSON               |      7,019 |          0 |          1 |      7,020 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\package.json                           | JSON               |         53 |          0 |          1 |         54 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\public\vite.svg                        | XML                |          1 |          0 |          0 |          1 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\App.css                            | CSS                |          0 |          0 |          2 |          2 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\App.tsx                            | TypeScript JSX     |        198 |          4 |          7 |        209 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\CheckAuthentication.tsx | TypeScript JSX     |         14 |          0 |          4 |         18 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\Confirm.tsx             | TypeScript JSX     |        135 |          6 |         11 |        152 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\CustomBackdrop.tsx      | TypeScript JSX     |         18 |          0 |          4 |         22 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\CustomNavLink.tsx       | TypeScript JSX     |         16 |          4 |          4 |         24 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\CustomPagination.tsx    | TypeScript JSX     |         31 |          0 |          4 |         35 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\DataTable.tsx           | TypeScript JSX     |         58 |          0 |          4 |         62 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\DropdownSelect.tsx      | TypeScript JSX     |         44 |          0 |          4 |         48 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\ExpandMore.tsx          | TypeScript JSX     |         17 |          0 |          3 |         20 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\Footer.tsx              | TypeScript JSX     |         12 |          0 |          3 |         15 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\Header.tsx              | TypeScript JSX     |        312 |          6 |         18 |        336 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\HoverEffect.tsx         | TypeScript JSX     |         27 |          1 |          2 |         30 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\ItemList.tsx            | TypeScript JSX     |         80 |         11 |          7 |         98 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\LeftSideList.tsx        | TypeScript JSX     |        160 |         16 |         10 |        186 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\Modal.tsx               | TypeScript JSX     |         62 |          3 |          5 |         70 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\PaymentForm.tsx         | TypeScript JSX     |        150 |          4 |         12 |        166 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\PersonalInfo.tsx        | TypeScript JSX     |        274 |         16 |         13 |        303 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\RequireAuth.tsx         | TypeScript JSX     |         27 |          0 |          4 |         31 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\Sach.tsx                | TypeScript JSX     |        207 |          0 |          7 |        214 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\SignIn.tsx              | TypeScript JSX     |        224 |          2 |         11 |        237 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\SignUp.tsx              | TypeScript JSX     |        226 |         11 |         11 |        248 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\components\StripeContainer.tsx     | TypeScript JSX     |         35 |          0 |          3 |         38 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\hooks\useAxiosPrivate.tsx          | TypeScript JSX     |         24 |          0 |          3 |         27 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\hooks\useCookie.tsx                | TypeScript JSX     |         28 |          0 |          4 |         32 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\hooks\useLocalStorage.tsx          | TypeScript JSX     |         28 |          0 |          2 |         30 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\index.css                          | CSS                |          0 |         69 |          1 |         70 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\layouts\Layout.tsx                 | TypeScript JSX     |         12 |          0 |          2 |         14 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\main.tsx                           | TypeScript JSX     |          5 |          0 |          2 |          7 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\ConfirmPage.tsx              | TypeScript JSX     |          5 |          0 |          2 |          7 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\ForgotPass.tsx               | TypeScript JSX     |        281 |          1 |         13 |        295 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\HomePage.tsx                 | TypeScript JSX     |        186 |          1 |         14 |        201 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\ProductsPage.tsx             | TypeScript JSX     |        340 |         64 |         28 |        432 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\SachDetailsPage.tsx          | TypeScript JSX     |        324 |          2 |          8 |        334 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\SignInPage.tsx               | TypeScript JSX     |          5 |          0 |          2 |          7 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\SignUpPage.tsx               | TypeScript JSX     |         10 |          0 |          3 |         13 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\UserCartPage.tsx             | TypeScript JSX     |        534 |         44 |         18 |        596 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\UserInfoPage.tsx             | TypeScript JSX     |        292 |          3 |         18 |        313 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\UserOrderDetailsPage.tsx     | TypeScript JSX     |        333 |          2 |          7 |        342 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\UserOrderPage.tsx            | TypeScript JSX     |        376 |          5 |         27 |        408 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\admin\AdminInfoPage.tsx      | TypeScript JSX     |          5 |          0 |          3 |          8 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\admin\AdminMainPage.tsx      | TypeScript JSX     |        122 |         13 |          6 |        141 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\admin\AdminOrder.tsx         | TypeScript JSX     |        558 |         20 |         38 |        616 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\admin\AdminOrderDetails.tsx  | TypeScript JSX     |        286 |         12 |          3 |        301 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\admin\AdminSach.tsx          | TypeScript JSX     |        342 |        109 |         20 |        471 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\admin\AdminSachCreate.tsx    | TypeScript JSX     |        483 |         98 |         12 |        593 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\admin\AdminSachDetails.tsx   | TypeScript JSX     |        664 |         16 |         12 |        692 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\admin\AdminStatistics.tsx    | TypeScript JSX     |        318 |         16 |         21 |        355 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\pages\exceptions\ErrorPage.tsx     | TypeScript JSX     |         53 |          0 |          4 |         57 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\services\accountApi.tsx            | TypeScript JSX     |         48 |          3 |          3 |         54 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\services\axios.tsx                 | TypeScript JSX     |         11 |          0 |          3 |         14 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\services\cartApi.tsx               | TypeScript JSX     |         25 |          0 |          3 |         28 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\services\mailApi.tsx               | TypeScript JSX     |         24 |          0 |          2 |         26 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\services\sachApi.tsx               | TypeScript JSX     |         32 |          0 |          3 |         35 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\types\AccountType.ts               | TypeScript         |         21 |          0 |          4 |         25 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\types\CartType.ts                  | TypeScript         |          9 |          0 |          1 |         10 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\types\ConfirmationType.ts          | TypeScript         |          4 |          0 |          1 |          5 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\types\ExceptionType.tsx            | TypeScript JSX     |          0 |          0 |          1 |          1 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\types\OrderType.ts                 | TypeScript         |         24 |          0 |          2 |         26 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\types\ResponseType.ts              | TypeScript         |         41 |          2 |         11 |         54 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\types\RevenueType.ts               | TypeScript         |          6 |          0 |          1 |          7 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\types\SachType.ts                  | TypeScript         |         27 |          0 |          4 |         31 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\utils\Constants.ts                 | TypeScript         |         48 |          0 |          5 |         53 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\utils\jwrtConverter.ts             | TypeScript         |         15 |          0 |          2 |         17 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\utils\numberFormatter.ts           | TypeScript         |          5 |          0 |          1 |          6 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\utils\reducerCreateQueryParams.ts  | TypeScript         |         81 |          0 |         10 |         91 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\utils\timeAdjustment.ts            | TypeScript         |          6 |          0 |          1 |          7 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\vite-env.d copy.ts                 | TypeScript         |          0 |          1 |          1 |          2 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\src\vite-env.d.ts                      | TypeScript         |          0 |          1 |          1 |          2 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\tsconfig.json                          | JSON with Comments |         21 |          2 |          3 |         26 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\tsconfig.node.json                     | JSON               |         10 |          0 |          1 |         11 |
+| c:\Users\akito\Learning\FPT\GradProject\bookshop-frontend\vite.config.ts                         | TypeScript         |          5 |          1 |          2 |          8 |
+| Total                                                                                            |                    |     15,527 |        569 |        505 |     16,601 |
++--------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
